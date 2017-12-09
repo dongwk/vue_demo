@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件处理</title>
+</head>
+<body>
+<!-- 事件修饰符 -->
+<!-- 阻止单击事件继续传播 -->
+<a v-on:click.stop="doThis"></a>
+
+<!-- 提交事件不再重载页面 -->
+<form v-on:submit.prevent="onSubmit"></form>
+
+<!-- 修饰符可以串联 -->
+<a v-on:click.stop.prevent="doThat"></a>
+
+<!-- 只有修饰符 -->
+<form v-on:submit.prevent></form>
+
+<!-- 添加事件监听器时使用事件捕获模式 -->
+<!-- 即内部元素触发的事件先在此处处理，然后才交由内部元素自身进行处理 -->
+<div v-on:click.capture="doThis">...</div>
+
+<!-- 只当在 event.target 是当前元素自身时触发处理函数 -->
+<!-- 即事件不是从内部元素触发的 -->
+<div v-on:click.self="doThat">...</div>
+
+<!-- 点击事件将只会触发一次 -->
+<a v-on:click.once="doThis"></a>
+
+<!-- 按键修饰符 -->
+<!-- 只有在 `keyCode` 是 13 时调用 `vm.submit()` -->
+<input v-on:keyup.13="submit">
+<!-- 同上 -->
+<input v-on:keyup.enter="submit">
+<!-- 缩写语法 -->
+<input @keyup.enter="submit">
+<!--全部的按键别名-->
+
+<!-- 自动匹配按键修饰符 -->
+<!--你也可直接将 KeyboardEvent.key 暴露的任意有效按键名转换为 kebab-case 来作为修饰符-->
+<!--<input @keyup.page-down="onPageDown">-->
+<!--在上面的例子中，处理函数仅在 $event.key === 'PageDown' 时被调用。-->
+
+<!-- .exact 修饰符 -->
+<!-- 即使 Alt 或 Shift 被一同按下时也会触发 -->
+<button @click.ctrl="onClick">A</button>
+<!-- 仅在只有 Ctrl 被按下的时候触发 -->
+<button @click.ctrl.exact="onCtrlClick">A</button>
+
+<script src="https://cdn.bootcss.com/vue/2.5.9/vue.min.js"></script>
+<script type="application/javascript">
+    var vm = new Vue({
+        // 选项
+    })
+
+    // 我们的数据对象
+    var data = { a: 1 }
+
+    // 该对象被加入到一个 Vue 实例中
+    var vm = new Vue({
+        data: data
+    })
+
+    // 他们引用相同的对象！
+    vm.a === data.a // => true
+
+    // 设置属性也会影响到原始数据
+    vm.a = 2
+    data.a // => 2
+
+    // ... 反之亦然
+    data.a = 3
+    vm.a // => 3
+
+    var data = { a: 1 }
+    var vm = new Vue({
+        el: '#example',
+        data: data
+    })
+
+    vm.$data === data // => true
+    vm.$el === document.getElementById('example') // => true
+
+    // $watch 是一个实例方法
+    vm.$watch('a', function (newValue, oldValue) {
+        // 这个回调将在 `vm.a` 改变后调用
+    })
+</script>
+</body>
+</html>

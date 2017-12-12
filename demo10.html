@@ -43,17 +43,7 @@
 <!--<child :my-message="parentMsg"></child>-->
 
 <!-- 如果你想把一个对象的所有属性作为 prop 进行传递，可以使用不带任何参数的 v-bind (即用 v-bind 而不是 v-bind:prop-name)。例如，已知一个 todo 对象： -->
-<!--
-todo: {
-    text: 'Learn Vue',
-    isComplete: false
-}
-<todo-item v-bind="todo"></todo-item>
-<todo-item
-        v-bind:text="todo.text"
-        v-bind:is-complete="todo.isComplete"
-></todo-item>
--->
+<!--<todo-item v-bind="todo"></todo-item>-->
 
 <!-- 字面量语法 vs 动态语法 -->
 <!-- 传递了一个字符串 "1" -->
@@ -64,14 +54,14 @@ todo: {
 <script src="https://cdn.bootcss.com/vue/2.5.9/vue.min.js"></script>
 <script type="application/javascript">
 //    全局注册
-    Vue.component('my-component', {
-        template: '<div>A custom component!</div>'
-    })
+//    Vue.component('my-component', {
+//        template: '<div>A custom component!</div>'
+//    })
 
 //    创建根实例
-    new Vue({
-        el: '#example'
-    })
+//    new Vue({
+//        el: '#example'
+//    })
 
 //    局部注册
 //    var Child = {
@@ -87,24 +77,24 @@ todo: {
 //    })
 
 //    data 必须是函数
-    var data = { counter: 0 }
-    Vue.component('simple-counter', {
-        template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+//    var data = { counter: 0 }
+//    Vue.component('simple-counter', {
+//        template: '<button v-on:click="counter += 1">{{ counter }}</button>',
 //         技术上 data 的确是一个函数了，因此 Vue 不会警告，
 //         但是我们却给每个组件实例返回了同一个对象的引用
 //        data: function () {
 //            return data
 //        }
 //        由于这三个组件实例共享了同一个 data 对象，因此递增一个 counter 会影响所有组件！这就错了。我们可以通过为每个组件返回全新的数据对象来修复这个问题：
-        data: function () {
-            return {
-                counter: 0
-            }
-        }
-    })
-    new Vue({
-        el: '#example-2'
-    })
+//        data: function () {
+//            return {
+//                counter: 0
+//            }
+//        }
+//    })
+//    new Vue({
+//        el: '#example-2'
+//    })
 
 //    使用 Prop 传递数据
 //    Vue.component('child', {
@@ -123,14 +113,263 @@ todo: {
 //    })
 
 //    单向数据流
+//    Prop 作为初始值传入后，子组件想把它当作局部数据来用；
 //    props: ['initialCounter'],
 //        data: function () {
 //        return { counter: this.initialCounter }
 //    }
+//    Prop 作为原始数据传入，由子组件处理成其它数据输出。
 //    props: ['initialCounter'],
 //        data: function () {
 //        return { counter: this.initialCounter }
 //    }
-</script>
+
+//    Prop 验证
+//    Vue.component('example', {
+//        props: {
+//            // 基础类型检测 (`null` 指允许任何类型)
+//            propA: Number,
+//            // 可能是多种类型
+//            propB: [String, Number],
+//            // 必传且是字符串
+//            propC: {
+//                type: String,
+//                required: true
+//            },
+//            // 数值且有默认值
+//            propD: {
+//                type: Number,
+//                default: 100
+//            },
+//            // 数组/对象的默认值应当由一个工厂函数返回
+//            propE: {
+//                type: Object,
+//                default: function () {
+//                    return { message: 'hello' }
+//                }
+//            },
+//            // 自定义验证函数
+//            propF: {
+//                validator: function (value) {
+//                    return value > 10
+//                }
+//            }
+//        }
+//    })
+//    当 prop 验证失败，Vue 会抛出警告 (如果使用的是开发版本)。注意 prop 会在组件实例创建之前进行校验，所以在 default 或 validator 函数里，诸如 data、computed 或 methods 等实例属性还无法使用。
+
+//    非 Prop 特性
+//    这些特性都会被添加到组件的根元素上
+//    <bs-date-input data-3d-date-picker="true"></bs-date-input>
+//    它会被自动添加到 bs-date-input 的根元素上
+
+
+//    替换/合并现有的特性
+//    <bs-date-input
+//    data-3d-date-picker="true"
+//    class="date-picker-theme-dark"
+//        ></bs-date-input>
+//    这两个特性的值都会做合并 (merge) 操作，让最终生成的值为：form-control date-picker-theme-dark。
+
+//    自定义事件
+//    使用 v-on 绑定自定义事件
+//    <div id="counter-event-example">
+//        <p>{{ total }}</p>
+//    <button-counter v-on:increment="incrementTotal"></button-counter>
+//        <button-counter v-on:increment="incrementTotal"></button-counter>
+//    </div>
+//    Vue.component('button-counter', {
+//        template: '<button v-on:click="incrementCounter">{{ counter }}</button>',
+//        data: function () {
+//            return {
+//                counter: 0
+//            }
+//        },
+//        methods: {
+//            incrementCounter: function () {
+//                this.counter += 1
+//                this.$emit('increment')
+//            }
+//        },
+//    })
+//
+//    new Vue({
+//        el: '#counter-event-example',
+//        data: {
+//            total: 0
+//        },
+//        methods: {
+//            incrementTotal: function () {
+//                this.total += 1
+//            }
+//        }
+//    })
+
+//    给组件绑定原生事件
+//    有时候，你可能想在某个组件的根元素上监听一个原生事件。可以使用 v-on 的修饰符 .native。例如：
+//    <my-component v-on:click.native="doTheThing"></my-component>
+
+//    .sync 修饰符
+
+//    使用自定义事件的表单输入组件
+
+//    自定义组件的 v-model
+//    Vue.component('my-checkbox', {
+//        model: {
+//            prop: 'checked',
+//            event: 'change'
+//        },
+//        props: {
+//            checked: Boolean,
+//            // 这样就允许拿 `value` 这个 prop 做其它事了
+//            value: String
+//        },
+//        // ...
+//    })
+//    <my-checkbox v-model="foo" value="some value"></my-checkbox>
+
+//    非父子组件的通信
+
+//    使用插槽分发内容
+
+//    单个插槽
+//    假定 my-component 组件有如下模板：
+//    除非子组件模板包含至少一个 <slot> 插口，否则父组件的内容将会被丢弃
+//    <div>
+//        <h2>我是子组件的标题</h2>
+//        <slot>
+//        只有在没有要分发的内容时才会显示。
+//        </slot>
+//    </div>
+//    父组件模板：
+//    <div>
+//        <h1>我是父组件的标题</h1>
+//        <my-component>
+//            <p>这是一些初始内容</p>
+//            <p>这是更多的初始内容</p>
+//        </my-component>
+//    </div>
+//    渲染结果：
+//    <div>
+//        <h1>我是父组件的标题</h1>
+//        <div>
+//            <h2>我是子组件的标题</h2>
+//            <p>这是一些初始内容</p>
+//            <p>这是更多的初始内容</p>
+//        </div>
+//    </div>
+
+//    具名插槽
+//    <slot> 元素可以用一个特殊的特性 name 来进一步配置如何分发内容。多个插槽可以有不同的名字。具名插槽将匹配内容片段中有对应 slot 特性的元素。
+//    仍然可以有一个匿名插槽，它是默认插槽，作为找不到匹配的内容片段的备用插槽。如果没有默认插槽，这些找不到匹配的内容片段将被抛弃
+//    例如，假定我们有一个 app-layout 组件，它的模板为：
+//    <div class="container">
+//        <header>
+//            <slot name="header"></slot>
+//        </header>
+//        <main>
+//            <slot></slot>
+//        </main>
+//        <footer>
+//            <slot name="footer"></slot>
+//        </footer>
+//    </div>
+//    父组件模板：
+//    <app-layout>
+//        <h1 slot="header">这里可能是一个页面标题</h1>
+//            <p>主要内容的一个段落。</p>
+//        <p>另一个主要段落。</p>
+//        <p slot="footer">这里有一些联系信息</p>
+//    </app-layout>
+//    渲染结果为：
+//    <div class="container">
+//        <header>
+//            <h1>这里可能是一个页面标题</h1>
+//        </header>
+//        <main>
+//            <p>主要内容的一个段落。</p>
+//            <p>另一个主要段落。</p>
+//        </main>
+//        <footer>
+//            <p>这里有一些联系信息</p>
+//        </footer>
+//    </div>
+
+//    作用域插槽
+//    <div class="child">
+//        <slot text="hello from child"></slot>
+//    </div>
+//
+//    <div class="parent">
+//        <child>
+//            <template slot-scope="props">
+//                <span>hello from parent</span>
+//                <span>{{ props.text }}</span>
+//            </template>
+//        </child>
+//    </div>
+//
+//    <div class="parent">
+//        <div class="child">
+//            <span>hello from parent</span>
+//            <span>hello from child</span>
+//        </div>
+//    </div>
+
+//    在 2.5.0+，slot-scope 能被用在任意元素或组件中而不再局限于 <template>。
+//    列表组件的模板：
+//    <ul>
+//    <slot name="item"
+//    v-for="item in items"
+//        :text="item.text">
+//        <!-- 这里写入备用内容 -->
+//        </slot>
+//    </ul>
+//    <my-awesome-list :items="items">
+//        <!-- 作用域插槽也可以是具名的 -->
+//        <li
+//            slot="item"
+//            slot-scope="props"
+//            class="my-fancy-item">
+//                {{ props.text }}
+//        </li>
+//    </my-awesome-list>
+
+//    解构
+
+//    动态组件 =>
+//    var vm = new Vue({
+//        el: '#example',
+//        data: {
+//            currentView: 'home'
+//        },
+//        components: {
+//            home: { /* ... */ },
+//            posts: { /* ... */ },
+//            archive: { /* ... */ }
+//        }
+//    })
+//
+//    <component v-bind:is="currentView">
+//    <!-- 组件在 vm.currentview 变化时改变！ -->
+//    </component>
+//
+//    也可以直接绑定到组件对象上：
+//    var Home = {
+//        template: '<p>Welcome home!</p>'
+//    }
+//    var vm = new Vue({
+//        el: '#example',
+//        data: {
+//            currentView: Home
+//        }
+//    })
+
+//    keep-alive
+//    <keep-alive>
+//        <component :is="currentView">
+//            <!-- 非活动组件将被缓存！ -->
+//        </component>
+//    </keep-alive>
 </body>
 </html>
